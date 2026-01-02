@@ -36,13 +36,15 @@ build/
 .DS_Store
 
 # Ignore all environment files
-../.env.auth.local
-../.env.gateway.local
-../.env.todo.local
-../.env.auth
-../.env.gateway
-../.env.todo
-../.env
+#.env.auth.local
+#.env.gateway.local
+#.env.todo.local
+#.env.auth
+.env.*.*
+.env.*
+.env
+**/.env
+
 !example.env   # Keep only a template example for others
 
 
