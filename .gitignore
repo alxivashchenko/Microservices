@@ -36,10 +36,6 @@ build/
 .DS_Store
 
 # Ignore all environment files
-#.env.auth.local
-#.env.gateway.local
-#.env.todo.local
-#.env.auth
 .env.*.*
 .env.*
 .env
