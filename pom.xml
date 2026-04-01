@@ -6,11 +6,17 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Это НЕ spring-boot parent -->
     <groupId>com.alexivashchenko</groupId>
     <artifactId>microservices-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>auth-service</module>
+        <module>user-service</module>
+        <module>todo-service</module>
+        <module>gateway-service</module>
+    </modules>
 
     <!-- Spring Boot parent -->
     <parent>
@@ -28,7 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- Общие dependency BOM -->
+    <!-- General dependency BOM -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -39,7 +45,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- JJWT dependencies без BOM -->
+            <!-- JJWT dependencies without BOM -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
@@ -53,7 +59,7 @@
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt-jackson</artifactId> <!-- или jjwt-gson -->
+                <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson -->
                 <version>${jjwt.version}</version>
                 <scope>runtime</scope>
             </dependency>
@@ -72,7 +78,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- Общие плагины -->
     <build>
         <pluginManagement>
             <plugins>
