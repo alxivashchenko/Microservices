@@ -95,45 +95,47 @@ services:
     networks:
       - todo-network
 
-#  jaeger:
-#    image: jaegertracing/all-in-one:1.54
-#    ports:
-#      - "16686:16686"
-#    networks:
-#      - todo-network
-#
-#  otel-collector:
-#    image: otel/opentelemetry-collector-contrib:latest
-#    command: [ "--config=/etc/otel/config.yaml" ]
-#    volumes:
-#      - ./observability/otel-config.yaml:/etc/otel/config.yaml
-#    ports:
-#      - "4318:4318"
-##    depends_on:
-##      - jaeger
-#    networks:
-#      - todo-network
-#
-#  prometheus:
-#    image: prom/prometheus
-#    volumes:
-#      - ./observability/prometheus.yaml:/etc/prometheus/prometheus.yaml
-#    ports:
-#      - "9090:9090"
-#    networks:
-#      - todo-network
-#
-#  grafana:
-#    image: grafana/grafana
-#    ports:
-#      - "3001:3000"
-#    depends_on:
-#      - prometheus
-#    networks:
-#      - todo-network
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "16686:16686"
+#      - "4317:4317"
+    networks:
+      - todo-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - todo-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - todo-network
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.102.1
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./observability/otel-collector.yaml:/etc/otel/config.yaml
+    ports:
+      - "4318:4318"
+      - "4317:4317"
+      - "8889:8889"
+    networks:
+      - todo-network
 
 volumes:
   pgdata:
+  grafana-storage:
 
 networks:
   todo-network:
