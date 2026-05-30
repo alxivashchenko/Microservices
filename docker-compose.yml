@@ -108,7 +108,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - todo-network
 
@@ -120,12 +120,14 @@ services:
       - todo-network
     volumes:
       - grafana-storage:/var/lib/grafana
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.102.1
     command: ["--config=/etc/otel/config.yaml"]
     volumes:
-      - ./observability/otel-collector.yaml:/etc/otel/config.yaml
+      - ./observability/otel/otel-collector.yaml:/etc/otel/config.yaml
     ports:
       - "4318:4318"
       - "4317:4317"
