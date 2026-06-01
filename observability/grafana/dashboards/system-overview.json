@@ -8,24 +8,44 @@
     "from": "now-6h",
     "to": "now"
   },
+
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+
   "panels": [
     {
       "id": 1,
       "type": "timeseries",
       "title": "Traffic",
       "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
       "targets": [
         {
           "refId": "A",
           "expr": "sum(rate(http_server_requests_seconds_count[1m])) by (job)"
         }
-      ]
+      ],
+      "legend": { "showLegend": true },
+      "tooltip": { "mode": "single" }
     },
+
     {
       "id": 2,
       "type": "timeseries",
       "title": "Error rate",
       "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
       "targets": [
         {
           "refId": "A",
@@ -33,11 +53,13 @@
         }
       ]
     },
+
     {
       "id": 3,
       "type": "timeseries",
       "title": "Latency",
       "datasource": "Prometheus",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
           "refId": "A",
@@ -45,11 +67,13 @@
         }
       ]
     },
+
     {
       "id": 4,
       "type": "timeseries",
       "title": "JVM metrics",
       "datasource": "Prometheus",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
       "targets": [
         {
           "refId": "A",
@@ -57,5 +81,12 @@
         }
       ]
     }
-  ]
+  ],
+
+  "timepicker": {},
+  "templating": {
+    "list": []
+  },
+  "tags": [],
+  "liveNow": false
 }
