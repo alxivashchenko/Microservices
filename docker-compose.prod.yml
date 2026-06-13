@@ -1,0 +1,148 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-todo
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+#    ports:
+#      - "5432:5432"
+    env_file:
+      - .env.postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - todo-network
+
+  todo-service:
+#    build:
+#      context: .
+#      dockerfile: todo-service/Dockerfile
+    image: ghcr.io/alxivashchenko/microservices-todo-service:1.0.0
+    container_name: todo-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8082:8084"
+    env_file:
+      - .env.todo
+    networks:
+      - todo-network
+
+  auth-service:
+#    build:
+#      context: .
+#      dockerfile: auth-service/Dockerfile
+    image: ghcr.io/alxivashchenko/microservices-auth-service:1.0.0
+    container_name: auth-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8081:8084"
+    env_file:
+      - .env.auth
+    networks:
+      - todo-network
+
+  user-service:
+#    build:
+#      context: .
+#      dockerfile: user-service/Dockerfile
+    image: ghcr.io/alxivashchenko/microservices-user-service:1.0.0
+    container_name: user-service
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8083:8084"
+    env_file:
+      - .env.user
+    networks:
+      - todo-network
+
+  gateway-service:
+#    build:
+#      context: .
+#      dockerfile: gateway-service/Dockerfile
+    image: ghcr.io/alxivashchenko/microservices-gateway-service:1.0.0
+    container_name: gateway-service
+    restart: always
+    depends_on:
+      auth-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+      todo-service:
+        condition: service_started
+    ports:
+      - "8084:8084"
+    env_file:
+      - .env.gateway
+    networks:
+      - todo-network
+
+  todo-frontend:
+#    build: ./todo-frontend
+    image: ghcr.io/alxivashchenko/microservices-todo-frontend:1.0.0
+    container_name: todo-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - todo-network
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    ports:
+      - "16686:16686"
+#      - "4317:4317"
+    networks:
+      - todo-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - todo-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - todo-network
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.102.1
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./observability/otel/otel-collector.yaml:/etc/otel/config.yaml
+    ports:
+      - "4318:4318"
+      - "4317:4317"
+      - "8889:8889"
+    networks:
+      - todo-network
+
+volumes:
+  pgdata:
+  grafana-storage:
+
+networks:
+  todo-network:
