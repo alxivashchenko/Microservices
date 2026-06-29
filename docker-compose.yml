@@ -9,8 +9,8 @@ services:
       timeout: 5s
       retries: 5
     restart: always
-#    ports:
-#      - "5432:5432"
+    #    ports:
+    #      - "5432:5432"
     env_file:
       - .env.postgres
     volumes:
@@ -29,7 +29,7 @@ services:
       postgres:
         condition: service_healthy
       otel-collector:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8082:8084"
     env_file:
@@ -47,7 +47,7 @@ services:
       postgres:
         condition: service_healthy
       otel-collector:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8081:8084"
     env_file:
@@ -65,7 +65,7 @@ services:
       postgres:
         condition: service_healthy
       otel-collector:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8083:8084"
     env_file:
@@ -87,7 +87,7 @@ services:
       todo-service:
         condition: service_started
       otel-collector:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8084:8084"
     env_file:
@@ -107,7 +107,7 @@ services:
     image: jaegertracing/all-in-one:1.57
     ports:
       - "16686:16686"
-#      - "4317:4317"
+    #      - "4317:4317"
     networks:
       - todo-network
 
@@ -142,12 +142,6 @@ services:
       - "8889:8889"
     networks:
       - todo-network
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:13133/" ]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-      start_period: 10s
 
 volumes:
   pgdata:
