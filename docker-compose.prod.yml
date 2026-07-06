@@ -103,6 +103,8 @@ services:
 #    build: ./todo-frontend
     image: ghcr.io/alxivashchenko/microservices-todo-frontend:1.0.0
     container_name: todo-frontend
+    depends_on:
+      - gateway-service
     ports:
       - "3000:80"
     networks:

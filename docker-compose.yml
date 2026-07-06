@@ -112,7 +112,6 @@ services:
     #      - "4317:4317"
     networks:
       - todo-network
-#    profiles: ["observability"]
 
   prometheus:
     image: prom/prometheus
@@ -122,7 +121,6 @@ services:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - todo-network
-#    profiles: ["observability"]
 
   grafana:
     image: grafana/grafana
@@ -134,7 +132,6 @@ services:
       - grafana-storage:/var/lib/grafana
       - ./observability/grafana/provisioning:/etc/grafana/provisioning
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards
-#    profiles: ["observability"]
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.102.1
@@ -147,7 +144,6 @@ services:
       - "8889:8889"
     networks:
       - todo-network
-#    profiles: ["observability"]
 
 volumes:
   pgdata:

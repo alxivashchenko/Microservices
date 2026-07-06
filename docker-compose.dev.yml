@@ -9,8 +9,8 @@ services:
       timeout: 5s
       retries: 5
     restart: always
-#    ports:
-#      - "5432:5432"
+    #    ports:
+    #      - "5432:5432"
     env_file:
       - .env.postgres
     volumes:
@@ -28,6 +28,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      otel-collector:
+        condition: service_started
     ports:
       - "8082:8084"
     env_file:
@@ -44,6 +46,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      otel-collector:
+        condition: service_started
     ports:
       - "8081:8084"
     env_file:
@@ -60,6 +64,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      otel-collector:
+        condition: service_started
     ports:
       - "8083:8084"
     env_file:
@@ -80,6 +86,8 @@ services:
         condition: service_started
       todo-service:
         condition: service_started
+      otel-collector:
+        condition: service_started
     ports:
       - "8084:8084"
     env_file:
@@ -90,6 +98,8 @@ services:
   todo-frontend:
     build: ./todo-frontend
     container_name: todo-frontend
+    depends_on:
+      - gateway-service
     ports:
       - "3000:80"
     networks:
@@ -99,7 +109,7 @@ services:
     image: jaegertracing/all-in-one:1.57
     ports:
       - "16686:16686"
-#      - "4317:4317"
+    #      - "4317:4317"
     networks:
       - todo-network
 
