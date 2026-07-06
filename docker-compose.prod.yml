@@ -20,9 +20,6 @@ services:
       - todo-network
 
   todo-service:
-#    build:
-#      context: .
-#      dockerfile: todo-service/Dockerfile
     image: ghcr.io/alxivashchenko/microservices-todo-service:1.0.0
     container_name: todo-service
     restart: always
@@ -39,9 +36,6 @@ services:
       - todo-network
 
   auth-service:
-#    build:
-#      context: .
-#      dockerfile: auth-service/Dockerfile
     image: ghcr.io/alxivashchenko/microservices-auth-service:1.0.0
     container_name: auth-service
     restart: always
@@ -58,9 +52,6 @@ services:
       - todo-network
 
   user-service:
-#    build:
-#      context: .
-#      dockerfile: user-service/Dockerfile
     image: ghcr.io/alxivashchenko/microservices-user-service:1.0.0
     container_name: user-service
     restart: always
@@ -77,9 +68,6 @@ services:
       - todo-network
 
   gateway-service:
-#    build:
-#      context: .
-#      dockerfile: gateway-service/Dockerfile
     image: ghcr.io/alxivashchenko/microservices-gateway-service:1.0.0
     container_name: gateway-service
     restart: always
@@ -100,7 +88,6 @@ services:
       - todo-network
 
   todo-frontend:
-#    build: ./todo-frontend
     image: ghcr.io/alxivashchenko/microservices-todo-frontend:1.0.0
     container_name: todo-frontend
     depends_on:
